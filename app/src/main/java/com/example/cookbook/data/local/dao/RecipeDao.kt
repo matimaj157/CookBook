@@ -3,6 +3,7 @@ package com.example.cookbook.data.local.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Update
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -28,6 +29,12 @@ interface CookBookDao {
 
     @Insert
     suspend fun addToShoppingList(item: ShoppingListItem)
+
+    @Update
+    suspend fun updateShoppingItem(item: ShoppingListItem)
+
+    @Delete
+    suspend fun deleteShoppingItem(item: ShoppingListItem)
 
     // SPIŻARNIA
     @Query("SELECT * FROM pantry")

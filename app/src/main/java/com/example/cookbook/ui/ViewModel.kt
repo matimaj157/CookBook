@@ -11,7 +11,6 @@ import com.example.cookbook.data.local.entities.Recipe
 import com.example.cookbook.data.local.entities.ShoppingListItem
 
 class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
-
     val recipes: Flow<List<Recipe>> = dao.getAllRecipes()
     val shoppingList: Flow<List<ShoppingListItem>> = dao.getShoppingList()
     val pantryItems: Flow<List<PantryItem>> = dao.getPantryItems()
@@ -34,9 +33,22 @@ class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
         }
     }
 
+    fun addShoppingItem(name: String) {
+        viewModelScope.launch {
+            dao.addToShoppingList(ShoppingListItem(Name = name))
+        }
+    }
+
     fun toggleShoppingItem(item: ShoppingListItem) {
         viewModelScope.launch {
-            // Tutaj logika update'u w DAO
+            // Tworzymy kopię obiektu z odwróconą wartością isChecked i aktualizujemy w bazie
+            dao.updateShoppingItem(item.copy(isChecked = !item.isChecked))
+        }
+    }
+
+    fun deleteShoppingItem(item: ShoppingListItem) {
+        viewModelScope.launch {
+            dao.deleteShoppingItem(item)
         }
     }
 }

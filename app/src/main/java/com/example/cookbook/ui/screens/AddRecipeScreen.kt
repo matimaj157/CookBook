@@ -1,12 +1,21 @@
 package com.example.cookbook.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.cookbook.ui.CookBookViewModel
 
 @Composable
@@ -15,10 +24,10 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
 
-    // 1. Stan przechowujący URI wybranego zdjęcia
+    // Stan przechowujący URI wybranego zdjęcia
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // 2. Launcher do otwierania galerii
+    // Launcher do otwierania galerii (wymaga odpowiednich importów ActivityResultContracts)
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -26,33 +35,61 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xFFE0F7E9)).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE0F7E9))
+            .verticalScroll(rememberScrollState()) // Dodano scrollowanie formularza
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Nazwa") })
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Nazwa przepisu") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+        )
 
-        // 3. Klikalny kontener na zdjęcie
+        // Klikalny kontener na zdjęcie
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(200.dp)
                 .background(Color.DarkGray)
-                .clickable { launcher.launch("image/*") }, // Otwiera galerię
+                .clickable { launcher.launch("image/*") }, // Otwiera galerię zdjęć
             contentAlignment = Alignment.Center
         ) {
             if (imageUri == null) {
                 Text("Kliknij, aby dodać zdjęcie", color = Color.White)
             } else {
-                // Wyświetla podgląd wybranego zdjęcia
+                // Wyświetla podgląd wybranego zdjęcia (wymaga importu AsyncImage z Coil)
                 AsyncImage(
                     model = imageUri,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
+                    contentDescription = "Wybrane zdjęcie",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop // Zdjęcie wypełni cały prostokąt
                 )
             }
         }
 
-        OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("Opis") })
+        // Dodane pole do wprowadzania składników
+        OutlinedTextField(
+            value = ingredients,
+            onValueChange = { ingredients = it },
+            label = { Text("Składniki (oddziel przecinkami)") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 3,
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+        )
+
+        OutlinedTextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("Sposób przygotowania") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 5,
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+        )
 
         Button(
             onClick = {
@@ -60,15 +97,19 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
                     viewModel.addRecipe(
                         name = name,
                         desc = description,
-                        ingredients = ingredients.split(","),
-                        uri = imageUri?.toString() // 4. Przekazujemy URI jako String do bazy
+                        // Dzielimy po przecinku, usuwamy ewentualne puste spacje i pomijamy puste fragmenty
+                        ingredients = ingredients.split(",").map { it.trim() }.filter { it.isNotBlank() },
+                        uri = imageUri?.toString()
                     )
                     onRecipeAdded()
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(56.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
         ) {
-            Text("Dodaj przepis")
+            Text("Dodaj przepis", color = Color(0xFF00FF9D))
         }
     }
 }

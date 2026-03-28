@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.ui.CookBookViewModel
@@ -28,28 +30,52 @@ fun RecipeDetailsScreen(recipeId: Int, viewModel: CookBookViewModel) {
         ) {
             AsyncImage(
                 model = it.mediaUri,
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth().height(250.dp).background(Color.LightGray)
+                contentDescription = "Zdjęcie dania",
+                contentScale = ContentScale.Crop, // Gwarantuje, że zdjęcie ładnie wypełni prostokąt
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .background(Color.LightGray)
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = it.name, fontSize = 28.sp, color = Color.Black)
+                Text(text = it.name, fontSize = 28.sp, color = Color.Black, fontWeight = FontWeight.Bold)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF333333))) {
+                // Dodano Modifier.fillMaxWidth() do karty
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF333333))
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Składniki:", color = Color.White, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                        Text(
+                            text = "Składniki:",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
                         it.ingredients.forEach { ingredient ->
-                            Text("• $ingredient", color = Color.White)
+                            Text("• $ingredient", color = Color.White, modifier = Modifier.padding(vertical = 2.dp))
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = "Przygotowanie:", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-                Text(text = it.description, modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = "Przygotowanie:",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = it.description,
+                    modifier = Modifier.padding(top = 8.dp),
+                    color = Color.DarkGray,
+                    lineHeight = 24.sp
+                )
             }
         }
     }

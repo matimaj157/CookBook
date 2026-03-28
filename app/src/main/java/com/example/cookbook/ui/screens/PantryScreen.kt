@@ -27,6 +27,7 @@ fun PantryScreen(viewModel: CookBookViewModel) {
             .background(Color(0xFFE0F7E9))
             .padding(16.dp)
     ) {
+        // Formularz dodawania nowego produktu do spiżarki
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.Black),
             modifier = Modifier.fillMaxWidth()
@@ -48,34 +49,65 @@ fun PantryScreen(viewModel: CookBookViewModel) {
                         newItemName = ""
                     }
                 }) {
-                    Icon(Icons.Default.AddCircle, contentDescription = null, tint = Color(0xFF00FF9D))
+                    Icon(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "Dodaj do spiżarki",
+                        tint = Color(0xFF00FF9D)
+                    )
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Lista produktów w spiżarce
         Card(
-            modifier = Modifier.fillMaxWidth().weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
-            LazyColumn(modifier = Modifier.padding(16.dp)) {
-                item {
-                    Text("Spiżarka", color = Color.White, fontSize = 20.sp, modifier = Modifier.padding(bottom = 12.dp))
-                }
-                items(items) { product ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(product.Name, color = Color.White)
-                        Row {
-                            IconButton(onClick = { /* Przenieś do zakupów */ }) {
-                                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.White)
-                            }
-                            IconButton(onClick = { viewModel.deletePantryItem(product.id) }) {
-                                Icon(Icons.Default.Close, contentDescription = null, tint = Color.White)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Spiżarka",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+
+                LazyColumn {
+                    items(items) { product ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = product.Name, color = Color.White)
+                            Row {
+                                // Przycisk przenoszenia do listy zakupów
+                                IconButton(onClick = {
+                                    // 1. Dodajemy do listy zakupów
+                                    viewModel.addShoppingItem(product.Name)
+                                    // 2. Usuwamy ze spiżarki
+                                    viewModel.deletePantryItem(product.id)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ShoppingCart,
+                                        contentDescription = "Przenieś do zakupów",
+                                        tint = Color(0xFF00FF9D) // Zmieniono kolor, żeby przycisk był lepiej widoczny
+                                    )
+                                }
+
+                                // Przycisk usuwania ze spiżarki
+                                IconButton(onClick = { viewModel.deletePantryItem(product.id) }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Usuń ze spiżarki",
+                                        tint = Color.White
+                                    )
+                                }
                             }
                         }
                     }
