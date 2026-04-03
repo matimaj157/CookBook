@@ -7,14 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-// IMPORTUJ SWOJE TRASY:
 import com.example.cookbook.navigation.RecipesList
 import com.example.cookbook.navigation.ShoppingList
 import com.example.cookbook.navigation.AddRecipe
 import com.example.cookbook.navigation.Pantry
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, shoppingItemCount: Int) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
@@ -22,7 +21,6 @@ fun BottomBar(navController: NavHostController) {
         containerColor = Color.Black,
         contentColor = Color.White
     ) {
-        // Przepisy - ZMIANA: używamy obiektu RecipesList zamiast "RecipesList"
         NavigationBarItem(
             selected = currentRoute?.contains("RecipesList") == true,
             onClick = { navController.navigate(RecipesList) },
@@ -30,19 +28,21 @@ fun BottomBar(navController: NavHostController) {
             icon = { Icon(Icons.Default.List, contentDescription = null, tint = Color(0xFF00FF9D)) }
         )
 
-        // Zakupy - ZMIANA: używamy obiektu ShoppingList
         NavigationBarItem(
             selected = currentRoute?.contains("ShoppingList") == true,
             onClick = { navController.navigate(ShoppingList) },
             label = { Text("Zakupy", color = Color.White) },
             icon = {
-                BadgedBox(badge = { Badge { Text("3") } }) {
+                if (shoppingItemCount > 0) {
+                    BadgedBox(badge = { Badge { Text(shoppingItemCount.toString()) } }) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color(0xFF00FF9D))
+                    }
+                } else {
                     Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color(0xFF00FF9D))
                 }
             }
         )
 
-        // Dodaj - ZMIANA: używamy obiektu AddRecipe
         NavigationBarItem(
             selected = currentRoute?.contains("AddRecipe") == true,
             onClick = { navController.navigate(AddRecipe) },
@@ -50,7 +50,6 @@ fun BottomBar(navController: NavHostController) {
             icon = { Icon(Icons.Default.AddCircle, contentDescription = null, tint = Color(0xFF00FF9D)) }
         )
 
-        // Spiżarka - ZMIANA: używamy obiektu Pantry
         NavigationBarItem(
             selected = currentRoute?.contains("Pantry") == true,
             onClick = { navController.navigate(Pantry) },
