@@ -1,15 +1,15 @@
 package com.example.cookbook.ui.screens
 
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.background
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,12 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cookbook.ui.CookBookViewModel
 
 @Composable
 fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
@@ -51,7 +54,8 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
             label = { Text("Nazwa przepisu") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White),
-            singleLine = true
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         // Klikalny kontener na zdjęcie
@@ -83,7 +87,8 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
             label = { Text("Składniki (oddziel przecinkami)") },
             modifier = Modifier.fillMaxWidth(),
             minLines = 3,
-            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         OutlinedTextField(
@@ -92,12 +97,21 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
             label = { Text("Sposób przygotowania") },
             modifier = Modifier.fillMaxWidth(),
             minLines = 5,
-            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         Button(
             onClick = {
                 if (name.isNotBlank()) {
+                    // Odtworzenie dźwięku potwierdzenia
+                    try {
+                        val toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+                        toneGen.startTone(ToneGenerator.TONE_PROP_ACK, 200)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
                     viewModel.addRecipe(
                         name = name,
                         desc = description,
