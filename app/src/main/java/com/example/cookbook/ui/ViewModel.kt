@@ -71,4 +71,14 @@ class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
             dao.deleteShoppingItem(item)
         }
     }
+
+    fun checkoutCheckedItems() {
+        viewModelScope.launch {
+            val checkedItems = dao.getCheckedShoppingItems()
+            checkedItems.forEach { item ->
+                dao.addToPantry(PantryItem(Name = item.Name))
+            }
+            dao.deleteCheckedShoppingItems()
+        }
+    }
 }

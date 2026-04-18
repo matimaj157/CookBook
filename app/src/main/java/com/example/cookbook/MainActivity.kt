@@ -66,7 +66,10 @@ class MainActivity : ComponentActivity() {
                         TopBanner(
                             showSearchBar = isRecipesList,
                             searchQuery = searchQuery,
-                            onSearchQueryChange = { viewModel.updateSearchQuery(it) }
+                            onSearchQueryChange = { 
+                                // Filtrujemy znaki nowej linii
+                                viewModel.updateSearchQuery(it.replace("\n", "")) 
+                            }
                         ) 
                     },
                     bottomBar = { BottomBar(navController, shoppingItemCount) }

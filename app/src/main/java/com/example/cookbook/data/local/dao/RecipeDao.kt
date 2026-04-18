@@ -27,6 +27,9 @@ interface CookBookDao {
     @Query("SELECT * FROM shopping_list")
     fun getShoppingList(): Flow<List<ShoppingListItem>>
 
+    @Query("SELECT * FROM shopping_list WHERE isChecked = 1")
+    suspend fun getCheckedShoppingItems(): List<ShoppingListItem>
+
     @Insert
     suspend fun addToShoppingList(item: ShoppingListItem)
 
@@ -35,6 +38,9 @@ interface CookBookDao {
 
     @Delete
     suspend fun deleteShoppingItem(item: ShoppingListItem)
+
+    @Query("DELETE FROM shopping_list WHERE isChecked = 1")
+    suspend fun deleteCheckedShoppingItems()
 
     // SPIŻARNIA
     @Query("SELECT * FROM pantry")

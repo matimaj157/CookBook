@@ -3,7 +3,10 @@ package com.example.cookbook.ui.screens
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.background
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -44,10 +47,11 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     ) {
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = { name = it.replace("\n", "") },
             label = { Text("Nazwa przepisu") },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White),
+            singleLine = true
         )
 
         // Klikalny kontener na zdjęcie
