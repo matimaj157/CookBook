@@ -30,14 +30,18 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
 
-    // Stan przechowujący URI wybranego zdjęcia
+    // Stan przechowujący URI wybranego zdjęcia/video
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var mediaType by remember { mutableStateOf<String?>(null) }
 
-    // Launcher do otwierania galerii (wymaga odpowiednich importów ActivityResultContracts)
+    // Launcher do otwierania galerii dla zdjęć i wideo
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         imageUri = uri
+        val contentResolver = context.contentResolver
+        val mimeType = contentResolver.getType(uri ?: Uri.EMPTY)
+        mediaType = if (mimeType?.startsWith("video") == true) "VIDEO" else "IMAGE"
     }
 
     Column(
@@ -64,11 +68,18 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
                 .fillMaxWidth()
                 .height(200.dp)
                 .background(Color.DarkGray)
-                .clickable { launcher.launch("image/*") }, // Otwiera galerię zdjęć
+                .clickable { launcher.launch(arrayOf("image/*", "video/*")) }, // Otwiera galerię zdjęć i wideo
             contentAlignment = Alignment.Center
         ) {
             if (imageUri == null) {
-                Text("Kliknij, aby dodać zdjęcie", color = Color.White)
+                Text("Kliknij, aby dodać zdjęcie lub wideo", color = Color.White)
+            } else if (mediaType == "VIDEO") {
+                Box(
+                    modifier = Modifier.fillMaxSize().background(Color.DarkGray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Wybrano wideo", color = Color.White)
+                }
             } else {
                 // Wyświetla podgląd wybranego zdjęcia (wymaga importu AsyncImage z Coil)
                 AsyncImage(
@@ -117,7 +128,8 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
                         desc = description,
                         // Dzielimy po przecinku, usuwamy ewentualne puste spacje i pomijamy puste fragmenty
                         ingredients = ingredients.split(",").map { it.trim() }.filter { it.isNotBlank() },
-                        uri = imageUri?.toString()
+                        uri = imageUri?.toString(),
+                        type = mediaType
                     )
                     onRecipeAdded()
                 }

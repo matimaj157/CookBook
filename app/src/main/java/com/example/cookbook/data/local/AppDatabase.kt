@@ -13,7 +13,7 @@ import com.example.cookbook.data.local.entities.ShoppingListItem
 
 @Database(
     entities = [Recipe::class, ShoppingListItem::class, PantryItem::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
