@@ -2,30 +2,20 @@ package com.example.cookbook.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 
-import com.example.cookbook.data.local.AppDatabase
 import com.example.cookbook.ui.CookBookViewModel
-import com.example.cookbook.ui.CookBookViewModelFactory
 import com.example.cookbook.ui.screens.*
 
 @Composable
 fun CookBookNavGraph(
     navController: NavHostController,
+    viewModel: CookBookViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Pobieramy bazę i tworzymy ViewModel
-    val context = LocalContext.current
-    val database = AppDatabase.getDatabase(context)
-    val viewModel: CookBookViewModel = viewModel(
-        factory = CookBookViewModelFactory(database.cookbookDao())
-    )
-
     NavHost(
         navController = navController,
         startDestination = Welcome,

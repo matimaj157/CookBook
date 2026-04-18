@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -11,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.ui.CookBookViewModel
@@ -38,10 +41,21 @@ fun PantryScreen(viewModel: CookBookViewModel) {
             ) {
                 TextField(
                     value = newItemName,
-                    onValueChange = { newItemName = it },
+                    onValueChange = { 
+                        // Filtrujemy znaki nowej linii
+                        newItemName = it.replace("\n", "") 
+                    },
                     placeholder = { Text("np. Mleko, Jajka...") },
                     modifier = Modifier.weight(1f),
-                    colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White)
+                    colors = TextFieldDefaults.colors(unfocusedContainerColor = Color.White),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        if (newItemName.isNotBlank()) {
+                            viewModel.addPantryItem(newItemName)
+                            newItemName = ""
+                        }
+                    })
                 )
                 IconButton(onClick = {
                     if (newItemName.isNotBlank()) {
