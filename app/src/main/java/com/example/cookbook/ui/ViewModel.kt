@@ -35,9 +35,9 @@ class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
         _searchQuery.value = query
     }
 
-    fun addRecipe(name: String, desc: String, ingredients: List<String>, uri: String?) {
+    fun addRecipe(name: String, desc: String, ingredients: List<String>, uri: String?, type: String?) {
         viewModelScope.launch {
-            dao.insertRecipe(Recipe(name = name, description = desc, ingredients = ingredients, mediaUri = uri))
+            dao.insertRecipe(Recipe(name = name, description = desc, ingredients = ingredients, mediaUri = uri, mediaType = type))
         }
     }
 

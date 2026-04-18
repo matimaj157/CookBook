@@ -14,6 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.ui.CookBookViewModel
 import coil.compose.AsyncImage
+import androidx.compose.ui.viewinterop.AndroidView
+import android.widget.VideoView
+import android.net.Uri
+
 
 @Composable
 fun RecipeDetailsScreen(recipeId: Int, viewModel: CookBookViewModel) {
@@ -28,15 +32,33 @@ fun RecipeDetailsScreen(recipeId: Int, viewModel: CookBookViewModel) {
                 .background(Color(0xFFE0F7E9))
                 .verticalScroll(rememberScrollState())
         ) {
-            AsyncImage(
-                model = it.mediaUri,
-                contentDescription = "Zdjęcie dania",
-                contentScale = ContentScale.Crop, // Gwarantuje, że zdjęcie ładnie wypełni prostokąt
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .background(Color.LightGray)
-            )
+            if (it.mediaType == "VIDEO" && it.mediaUri != null) {
+                AndroidView(
+                    factory = { context ->
+                        VideoView(context).apply {
+                            setVideoURI(Uri.parse(it.mediaUri))
+                            setOnCompletionListener { 
+                                // Optional: loop or stop
+                            }
+                            start()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(Color.Black)
+                )
+            } else {
+                AsyncImage(
+                    model = it.mediaUri,
+                    contentDescription = "Zdjęcie dania",
+                    contentScale = ContentScale.Crop, // Gwarantuje, że zdjęcie ładnie wypełni prostokąt
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(Color.LightGray)
+                )
+            }
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = it.name, fontSize = 28.sp, color = Color.Black, fontWeight = FontWeight.Bold)
