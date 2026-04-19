@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.screens
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -23,11 +25,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdated: () -> Unit) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var mediaType by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
     // Ładowanie danych przepisu
@@ -38,14 +42,25 @@ fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdate
             description = it.description
             ingredients = it.ingredients.joinToString(", ")
             imageUri = it.mediaUri?.let { uri -> Uri.parse(uri) }
+            mediaType = it.mediaType
         }
         isLoading = false
     }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        imageUri = uri
+        uri?.let {
+            // Uzyskaj trwałe uprawnienia do URI
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            imageUri = it
+            val contentResolver = context.contentResolver
+            val mimeType = contentResolver.getType(it)
+            mediaType = if (mimeType?.startsWith("video") == true) "VIDEO" else "IMAGE"
+        }
     }
 
     if (isLoading) {
@@ -76,11 +91,18 @@ fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdate
                     .fillMaxWidth()
                     .height(200.dp)
                     .background(Color.DarkGray)
-                    .clickable { launcher.launch("image/*") },
+                    .clickable { launcher.launch(arrayOf("image/*", "video/*")) },
                 contentAlignment = Alignment.Center
             ) {
                 if (imageUri == null) {
-                    Text("Kliknij, aby zmienić zdjęcie", color = Color.White)
+                    Text("Kliknij, aby zmienić zdjęcie lub wideo", color = Color.White)
+                } else if (mediaType == "VIDEO") {
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(Color.DarkGray),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Wybrano wideo", color = Color.White)
+                    }
                 } else {
                     AsyncImage(
                         model = imageUri,
@@ -121,7 +143,8 @@ fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdate
                                     name = name,
                                     description = description,
                                     ingredients = ingredients.split(",").map { i -> i.trim() }.filter { i -> i.isNotBlank() },
-                                    mediaUri = imageUri?.toString()
+                                    mediaUri = imageUri?.toString(),
+                                    mediaType = mediaType
                                 )
                                 viewModel.updateRecipe(updatedRecipe)
                                 onRecipeUpdated()

@@ -1,8 +1,8 @@
 package com.example.cookbook.ui.screens
 
-import android.media.AudioManager
-import android.media.ToneGenerator
+import android.content.Intent
 import android.net.Uri
+import android.view.SoundEffectConstants
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -26,6 +27,7 @@ import com.example.cookbook.ui.CookBookViewModel
 @Composable
 fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     val context = LocalContext.current
+    val view = LocalView.current
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
@@ -38,10 +40,17 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        imageUri = uri
-        val contentResolver = context.contentResolver
-        val mimeType = contentResolver.getType(uri ?: Uri.EMPTY)
-        mediaType = if (mimeType?.startsWith("video") == true) "VIDEO" else "IMAGE"
+        uri?.let {
+            // Uzyskaj trwałe uprawnienia do URI
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            imageUri = it
+            val contentResolver = context.contentResolver
+            val mimeType = contentResolver.getType(it)
+            mediaType = if (mimeType?.startsWith("video") == true) "VIDEO" else "IMAGE"
+        }
     }
 
     Column(
@@ -115,13 +124,8 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
         Button(
             onClick = {
                 if (name.isNotBlank()) {
-                    // Odtworzenie dźwięku potwierdzenia
-                    try {
-                        val toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-                        toneGen.startTone(ToneGenerator.TONE_PROP_ACK, 200)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    // Odtworzenie standardowego dźwięku kliknięcia
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
 
                     viewModel.addRecipe(
                         name = name,
