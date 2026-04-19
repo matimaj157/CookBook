@@ -36,7 +36,18 @@ fun CookBookNavGraph(
             val args = backStackEntry.toRoute<RecipeDetails>()
             RecipeDetailsScreen(
                 recipeId = args.recipeId,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onEditClick = { id -> navController.navigate(EditRecipe(recipeId = id)) },
+                onDeleteSuccess = { navController.popBackStack() }
+            )
+        }
+
+        composable<EditRecipe> { backStackEntry ->
+            val args = backStackEntry.toRoute<EditRecipe>()
+            EditRecipeScreen(
+                recipeId = args.recipeId,
+                viewModel = viewModel,
+                onRecipeUpdated = { navController.popBackStack() }
             )
         }
 

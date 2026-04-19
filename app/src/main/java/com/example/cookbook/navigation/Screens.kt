@@ -18,4 +18,7 @@ object ShoppingList
 object AddRecipe
 
 @Serializable
+data class EditRecipe(val recipeId: Int)
+
+@Serializable
 object Pantry

@@ -17,8 +17,14 @@ interface CookBookDao {
     @Query("SELECT * FROM recipes")
     fun getAllRecipes(): Flow<List<Recipe>>
 
+    @Query("SELECT * FROM recipes WHERE id = :id")
+    suspend fun getRecipeById(id: Int): Recipe?
+
     @Insert
     suspend fun insertRecipe(recipe: Recipe)
+
+    @Update
+    suspend fun updateRecipe(recipe: Recipe)
 
     @Delete
     suspend fun deleteRecipe(recipe: Recipe)

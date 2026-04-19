@@ -35,10 +35,26 @@ class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
         _searchQuery.value = query
     }
 
-    fun addRecipe(name: String, desc: String, ingredients: List<String>, uri: String?, type: String?) {
+    fun addRecipe(name: String, desc: String, ingredients: List<String>, uri: String?, type: String? = null) {
         viewModelScope.launch {
             dao.insertRecipe(Recipe(name = name, description = desc, ingredients = ingredients, mediaUri = uri, mediaType = type))
         }
+    }
+
+    fun updateRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            dao.updateRecipe(recipe)
+        }
+    }
+
+    fun deleteRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            dao.deleteRecipe(recipe)
+        }
+    }
+
+    suspend fun getRecipeById(id: Int): Recipe? {
+        return dao.getRecipeById(id)
     }
 
     fun addPantryItem(name: String) {
