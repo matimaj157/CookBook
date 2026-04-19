@@ -8,11 +8,6 @@ import org.junit.Assert.*
  * Local unit tests for the CookBook application.
  * These tests run on the development machine's JVM.
  */
-package com.example.cookbook
-
-import org.junit.Test
-
-import org.junit.Assert.*
 
 class ExampleUnitTest {
     /**
