@@ -77,7 +77,6 @@ class CookBookViewModel(private val dao: CookBookDao) : ViewModel() {
 
     fun toggleShoppingItem(item: ShoppingListItem) {
         viewModelScope.launch {
-            // Tworzymy kopię obiektu z odwróconą wartością isChecked i aktualizujemy w bazie
             dao.updateShoppingItem(item.copy(isChecked = !item.isChecked))
         }
     }

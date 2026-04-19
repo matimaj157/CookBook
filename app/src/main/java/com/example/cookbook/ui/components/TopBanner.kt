@@ -40,18 +40,18 @@ fun TopBanner(
     searchQuery: String = "",
     onSearchQueryChange: (String) -> Unit = {}
 ) {
-    // Local state to track if the user has clicked the search icon
+
     var isSearchExpanded by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
-    // Automatically focus the search field when it's expanded
+
     LaunchedEffect(isSearchExpanded) {
         if (isSearchExpanded) {
             focusRequester.requestFocus()
         }
     }
 
-    // If we leave the Recipes screen, ensure search mode is turned off
+
     LaunchedEffect(showSearchBar) {
         if (!showSearchBar) isSearchExpanded = false
     }
@@ -66,7 +66,6 @@ fun TopBanner(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         if (isSearchExpanded && showSearchBar) {
-            // Full-width search field when active
             TextField(
                 value = searchQuery,
                 onValueChange = onSearchQueryChange,
@@ -84,7 +83,7 @@ fun TopBanner(
                 trailingIcon = {
                     IconButton(onClick = {
                         isSearchExpanded = false
-                        onSearchQueryChange("") // Clear search when closing
+                        onSearchQueryChange("")
                     }) {
                         Icon(Icons.Default.Close, contentDescription = null, tint = Color.White)
                     }
@@ -103,7 +102,6 @@ fun TopBanner(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
             )
         } else {
-            // Standard title view - clicking it also opens search if available
             Text(
                 text = title,
                 color = Color.White,
@@ -116,7 +114,6 @@ fun TopBanner(
                 }
             )
 
-            // Show search icon only if supported on this screen
             if (showSearchBar) {
                 IconButton(onClick = { isSearchExpanded = true }) {
                     Icon(

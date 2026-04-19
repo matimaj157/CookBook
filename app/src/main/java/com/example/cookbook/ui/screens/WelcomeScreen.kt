@@ -30,8 +30,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
     var visible by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val view = LocalView.current
-    
-    // Uruchomienie animacji wejścia i odtworzenie dźwięku startowego
+
     LaunchedEffect(Unit) {
         visible = true
         try {
@@ -43,7 +42,6 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
         }
     }
 
-    // Animacja pulsującego przycisku
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
@@ -58,7 +56,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF00FF9D)) // Kolor z makiety
+            .background(Color(0xFF00FF9D))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -85,7 +83,6 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             }
         }
 
-        // Elementy listy (Karty z funkcjami) z efektem kaskadowym (staggered)
         val cardData = listOf(
             Triple(Icons.Default.List, "Przeglądaj przepisy", "Odkryj nowe smaki i przechowuj swoje ulubione przepisy"),
             Triple(Icons.Default.ShoppingCart, "Lista zakupów", "Planuj zakupy i zarządzaj składnikami"),
@@ -110,14 +107,13 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
 
         Button(
             onClick = {
-                // Standardowy dźwięk tapnięcia Androida
                 view.playSoundEffect(SoundEffectConstants.CLICK)
                 onStartClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .scale(scale), // Zastosowanie animacji pulsu
+                .scale(scale),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
             shape = RoundedCornerShape(28.dp)
         ) {

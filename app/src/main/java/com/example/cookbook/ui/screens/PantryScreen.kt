@@ -20,7 +20,6 @@ import com.example.cookbook.ui.CookBookViewModel
 
 @Composable
 fun PantryScreen(viewModel: CookBookViewModel) {
-    // Reaktywne pobieranie danych z bazy
     val items by viewModel.pantryItems.collectAsState(initial = emptyList())
     var newItemName by remember { mutableStateOf("") }
 
@@ -30,7 +29,6 @@ fun PantryScreen(viewModel: CookBookViewModel) {
             .background(Color(0xFFE0F7E9))
             .padding(16.dp)
     ) {
-        // Formularz dodawania nowego produktu do spiżarki
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.Black),
             modifier = Modifier.fillMaxWidth()
@@ -41,8 +39,7 @@ fun PantryScreen(viewModel: CookBookViewModel) {
             ) {
                 TextField(
                     value = newItemName,
-                    onValueChange = { 
-                        // Filtrujemy znaki nowej linii
+                    onValueChange = {
                         newItemName = it.replace("\n", "") 
                     },
                     placeholder = { Text("np. Mleko, Jajka...") },
@@ -74,7 +71,6 @@ fun PantryScreen(viewModel: CookBookViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Lista produktów w spiżarce
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,21 +96,17 @@ fun PantryScreen(viewModel: CookBookViewModel) {
                         ) {
                             Text(text = product.Name, color = Color.White)
                             Row {
-                                // Przycisk przenoszenia do listy zakupów
                                 IconButton(onClick = {
-                                    // 1. Dodajemy do listy zakupów
                                     viewModel.addShoppingItem(product.Name)
-                                    // 2. Usuwamy ze spiżarki
                                     viewModel.deletePantryItem(product.id)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.ShoppingCart,
                                         contentDescription = "Przenieś do zakupów",
-                                        tint = Color(0xFF00FF9D) // Zmieniono kolor, żeby przycisk był lepiej widoczny
+                                        tint = Color(0xFF00FF9D)
                                     )
                                 }
 
-                                // Przycisk usuwania ze spiżarki
                                 IconButton(onClick = { viewModel.deletePantryItem(product.id) }) {
                                     Icon(
                                         imageVector = Icons.Default.Close,

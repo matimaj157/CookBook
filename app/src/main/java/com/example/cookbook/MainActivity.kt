@@ -35,16 +35,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             CookBookTheme {
                 val view = LocalView.current
-                // Wymuszenie włączenia efektów dźwiękowych w widoku
                 LaunchedEffect(Unit) {
                     if (!view.isSoundEffectsEnabled) {
                         view.isSoundEffectsEnabled = true
                     }
                 }
-
                 val navController = rememberNavController()
-
-                // Pobieramy ViewModel
                 val context = LocalContext.current
                 val database = AppDatabase.getDatabase(context)
                 val viewModel: CookBookViewModel = viewModel(
@@ -54,15 +50,12 @@ class MainActivity : ComponentActivity() {
                 val shoppingList by viewModel.shoppingList.collectAsState(initial = emptyList())
                 val shoppingItemCount = shoppingList.size
 
-                // Obserwujemy aktualną trasę, aby wiedzieć czy pokazać pasek wyszukiwania
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                
-                // Sprawdzamy czy jesteśmy na ekranie listy przepisów używając type-safe check
+
                 val isRecipesList = navBackStackEntry?.destination?.hasRoute<RecipesList>() == true
                 
                 val searchQuery by viewModel.searchQuery.collectAsState()
 
-                // Czyścimy wyszukiwanie przy wychodzeniu z listy przepisów
                 LaunchedEffect(isRecipesList) {
                     if (!isRecipesList) {
                         viewModel.updateSearchQuery("")
@@ -75,8 +68,7 @@ class MainActivity : ComponentActivity() {
                         TopBanner(
                             showSearchBar = isRecipesList,
                             searchQuery = searchQuery,
-                            onSearchQueryChange = { 
-                                // Filtrujemy znaki nowej linii
+                            onSearchQueryChange = {
                                 viewModel.updateSearchQuery(it.replace("\n", "")) 
                             }
                         ) 

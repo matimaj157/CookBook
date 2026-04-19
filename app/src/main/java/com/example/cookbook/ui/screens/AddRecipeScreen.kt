@@ -31,12 +31,10 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
-
-    // Stan przechowujący URI wybranego zdjęcia/video
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var mediaType by remember { mutableStateOf<String?>(null) }
 
-    // Launcher do otwierania galerii dla zdjęć i wideo
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
@@ -71,13 +69,12 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
-        // Klikalny kontener na zdjęcie
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .background(Color.DarkGray)
-                .clickable { launcher.launch(arrayOf("image/*", "video/*")) }, // Otwiera galerię zdjęć i wideo
+                .clickable { launcher.launch(arrayOf("image/*", "video/*")) },
             contentAlignment = Alignment.Center
         ) {
             if (imageUri == null) {
@@ -90,17 +87,15 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
                     Text("Wybrano wideo", color = Color.White)
                 }
             } else {
-                // Wyświetla podgląd wybranego zdjęcia (wymaga importu AsyncImage z Coil)
                 AsyncImage(
                     model = imageUri,
                     contentDescription = "Wybrane zdjęcie",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop // Zdjęcie wypełni cały prostokąt
+                    contentScale = ContentScale.Crop
                 )
             }
         }
 
-        // Dodane pole do wprowadzania składników
         OutlinedTextField(
             value = ingredients,
             onValueChange = { ingredients = it },
@@ -124,13 +119,11 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
         Button(
             onClick = {
                 if (name.isNotBlank()) {
-                    // Odtworzenie standardowego dźwięku kliknięcia
                     view.playSoundEffect(SoundEffectConstants.CLICK)
 
                     viewModel.addRecipe(
                         name = name,
                         desc = description,
-                        // Dzielimy po przecinku, usuwamy ewentualne puste spacje i pomijamy puste fragmenty
                         ingredients = ingredients.split(",").map { it.trim() }.filter { it.isNotBlank() },
                         uri = imageUri?.toString(),
                         type = mediaType

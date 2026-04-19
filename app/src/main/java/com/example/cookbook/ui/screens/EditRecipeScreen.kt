@@ -34,7 +34,6 @@ fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdate
     var mediaType by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Ładowanie danych przepisu
     LaunchedEffect(recipeId) {
         val recipe = viewModel.getRecipeById(recipeId)
         recipe?.let {
@@ -51,7 +50,6 @@ fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdate
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
-            // Uzyskaj trwałe uprawnienia do URI
             context.contentResolver.takePersistableUriPermission(
                 it,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION

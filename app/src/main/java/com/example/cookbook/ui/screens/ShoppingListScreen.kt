@@ -33,7 +33,6 @@ fun ShoppingListScreen(viewModel: CookBookViewModel) {
             .background(Color(0xFFE0F7E9))
             .padding(16.dp)
     ) {
-        // Karta z polem do dodawania nowych elementów
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.Black),
             modifier = Modifier.fillMaxWidth()
@@ -44,8 +43,7 @@ fun ShoppingListScreen(viewModel: CookBookViewModel) {
             ) {
                 TextField(
                     value = newItemName,
-                    onValueChange = { 
-                        // Filtrujemy znaki nowej linii, aby zapewnić pojedynczą linię
+                    onValueChange = {
                         newItemName = it.replace("\n", "") 
                     },
                     placeholder = { Text("np. Mąka, Cukier...") },
@@ -77,7 +75,6 @@ fun ShoppingListScreen(viewModel: CookBookViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Karta wyświetlająca listę elementów
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -127,7 +124,6 @@ fun ShoppingListScreen(viewModel: CookBookViewModel) {
                                 )
                             )
 
-                            // Przekreślenie tekstu, jeśli checkbox jest zaznaczony
                             Text(
                                 text = item.Name,
                                 color = if (item.isChecked) Color.Gray else Color.White,
@@ -135,7 +131,6 @@ fun ShoppingListScreen(viewModel: CookBookViewModel) {
                                 modifier = Modifier.weight(1f).padding(start = 8.dp)
                             )
 
-                            // Przycisk usuwania z listy zakupów
                             IconButton(onClick = { viewModel.deleteShoppingItem(item) }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,

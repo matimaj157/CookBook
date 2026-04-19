@@ -123,7 +123,6 @@ fun RecipeDetailsScreen(
                     )
                 }
 
-                // Przyciski edycji i usuwania na górze zdjęcia
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
