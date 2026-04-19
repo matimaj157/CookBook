@@ -1,3 +1,7 @@
+/**
+ * Defines the theme and color scheme for the CookBook application,
+ * supporting light/dark modes and dynamic coloring.
+ */
 package com.example.cookbook.ui.theme
 
 import android.app.Activity
@@ -21,22 +25,14 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
+/**
+ * A Composable that sets the application's theme.
+ */
 @Composable
 fun CookBookTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the user's pantry/storage items.
+ * Users can manage what items they have in stock and move items to the shopping list.
+ */
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.background
@@ -18,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.ui.CookBookViewModel
 
+/**
+ * Displays the pantry UI and allows for item management.
+ */
 @Composable
 fun PantryScreen(viewModel: CookBookViewModel) {
     val items by viewModel.pantryItems.collectAsState(initial = emptyList())

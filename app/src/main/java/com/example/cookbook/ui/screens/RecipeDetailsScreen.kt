@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the full details of a specific recipe,
+ * including its ingredients, preparation steps, and media (image or video).
+ */
 package com.example.cookbook.ui.screens
 
 import android.net.Uri
@@ -24,6 +28,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import com.example.cookbook.ui.CookBookViewModel
 
+/**
+ * Displays detailed information about a recipe and provides editing/deletion options.
+ */
 @Composable
 fun RecipeDetailsScreen(
     recipeId: Int,

@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the welcome screen with app features,
+ * a pulsed button, and plays a startup sound.
+ */
 package com.example.cookbook.ui.screens
 
 import android.media.MediaPlayer
@@ -25,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.R
 
+/**
+ * Displays the welcome UI and handles user interaction.
+ */
 @Composable
 fun WelcomeScreen(onStartClick: () -> Unit) {
     var visible by remember { mutableStateOf(false) }
@@ -122,6 +129,9 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
     }
 }
 
+/**
+ * Displays a single feature item with icon, title, and description.
+ */
 @Composable
 fun FeatureCard(icon: ImageVector, title: String, description: String) {
     Card(
@@ -153,7 +163,7 @@ fun FeatureCard(icon: ImageVector, title: String, description: String) {
             )
             Text(
                 text = description,
-                color = Color(0xFFD0D0D0), // Jasnoszary kolor dla opisu
+                color = Color(0xFFD0D0D0),
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp),
                 lineHeight = 20.sp

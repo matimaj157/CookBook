@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the bottom navigation bar for the application.
+ * Provides navigation between the main screens: Recipes, Shopping List, Add Recipe, and Pantry.
+ */
 package com.example.cookbook.ui.components
 
 import android.view.SoundEffectConstants
@@ -14,6 +18,9 @@ import com.example.cookbook.navigation.ShoppingList
 import com.example.cookbook.navigation.AddRecipe
 import com.example.cookbook.navigation.Pantry
 
+/**
+ * Renders the navigation bar and handles route selection and click sounds.
+ */
 @Composable
 fun BottomBar(navController: NavHostController, shoppingItemCount: Int) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()

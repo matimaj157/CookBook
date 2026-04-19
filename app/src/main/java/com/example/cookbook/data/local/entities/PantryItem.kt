@@ -1,3 +1,6 @@
+/**
+ * Entity representing an item currently stored in the user's pantry.
+ */
 package com.example.cookbook.data.local.entities
 
 import androidx.room.Entity

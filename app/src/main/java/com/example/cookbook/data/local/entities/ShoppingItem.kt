@@ -1,3 +1,6 @@
+/**
+ * Entity representing an item in the shopping list.
+ */
 package com.example.cookbook.data.local.entities
 
 import androidx.room.Entity

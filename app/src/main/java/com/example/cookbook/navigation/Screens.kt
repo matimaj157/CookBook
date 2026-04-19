@@ -1,3 +1,7 @@
+/**
+ * Defines the destinations (routes) used for navigation within the application.
+ * Using Kotlin Serialization for type-safe navigation.
+ */
 package com.example.cookbook.navigation
 
 import kotlinx.serialization.Serializable
