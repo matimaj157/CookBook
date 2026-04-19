@@ -1,3 +1,7 @@
+/**
+ * Factory for creating [CookBookViewModel] instances.
+ * Handles the injection of the [CookBookDao] dependency.
+ */
 package com.example.cookbook.ui
 
 import androidx.lifecycle.ViewModel

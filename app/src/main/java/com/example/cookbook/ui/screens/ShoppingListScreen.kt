@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the user's shopping list.
+ * Users can add, delete, and toggle items as "bought", and move them to the pantry.
+ */
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.background
@@ -21,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cookbook.ui.CookBookViewModel
 
+/**
+ * Displays the shopping list UI and manages item interactions.
+ */
 @Composable
 fun ShoppingListScreen(viewModel: CookBookViewModel) {
     val items by viewModel.shoppingList.collectAsState(initial = emptyList())

@@ -39,7 +39,6 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
-            // Uzyskaj trwałe uprawnienia do URI
             context.contentResolver.takePersistableUriPermission(
                 it,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -55,7 +54,7 @@ fun AddRecipeScreen(viewModel: CookBookViewModel, onRecipeAdded: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFE0F7E9))
-            .verticalScroll(rememberScrollState()) // Dodano scrollowanie formularza
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

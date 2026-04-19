@@ -1,3 +1,6 @@
+/**
+ * Defines the color palette used in the CookBook application.
+ */
 package com.example.cookbook.ui.theme
 
 import androidx.compose.ui.graphics.Color

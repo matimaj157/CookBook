@@ -1,3 +1,7 @@
+/**
+ * A Composable that allows users to edit an existing recipe.
+ * Loads current recipe data and provides a form to update its details and media.
+ */
 package com.example.cookbook.ui.screens
 
 import android.content.Intent
@@ -23,6 +27,9 @@ import coil.compose.AsyncImage
 import com.example.cookbook.ui.CookBookViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Renders the recipe editing form and handles the update process.
+ */
 @Composable
 fun EditRecipeScreen(recipeId: Int, viewModel: CookBookViewModel, onRecipeUpdated: () -> Unit) {
     val context = LocalContext.current

@@ -1,3 +1,7 @@
+/**
+ * Defines the navigation graph for the CookBook application.
+ * Sets up the NavHost and maps destinations to their corresponding Composable screens.
+ */
 package com.example.cookbook.navigation
 
 import androidx.compose.runtime.Composable
@@ -10,6 +14,9 @@ import androidx.navigation.toRoute
 import com.example.cookbook.ui.CookBookViewModel
 import com.example.cookbook.ui.screens.*
 
+/**
+ * The main navigation host for the application.
+ */
 @Composable
 fun CookBookNavGraph(
     navController: NavHostController,

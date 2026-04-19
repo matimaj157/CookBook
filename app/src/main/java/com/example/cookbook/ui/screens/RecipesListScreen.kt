@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays a list of all recipes in a grid/list format.
+ * Allows users to search through recipes and click on them for details.
+ */
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.background
@@ -18,6 +22,9 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 
+/**
+ * Displays the list of recipes and handles navigation to recipe details.
+ */
 @Composable
 fun RecipesListScreen(viewModel: CookBookViewModel, onRecipeClick: (Int) -> Unit) {
     val recipes by viewModel.recipes.collectAsState(initial = emptyList())

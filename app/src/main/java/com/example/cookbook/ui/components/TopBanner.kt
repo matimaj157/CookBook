@@ -1,3 +1,7 @@
+/**
+ * A Composable that displays the top app bar.
+ * It supports displaying a title and an expandable search bar for filtering recipes.
+ */
 package com.example.cookbook.ui.components
 
 import androidx.compose.foundation.background
@@ -33,6 +37,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Renders the top banner with optional search functionality.
+ */
 @Composable
 fun TopBanner(
     title: String = "Książka Kucharska",

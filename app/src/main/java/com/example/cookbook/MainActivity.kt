@@ -1,3 +1,7 @@
+/**
+ * The main entry point of the CookBook Android application.
+ * Sets up the theme, navigation, and view model for the app's UI.
+ */
 package com.example.cookbook
 
 import android.os.Bundle
