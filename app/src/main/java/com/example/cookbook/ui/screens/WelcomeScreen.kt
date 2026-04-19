@@ -1,5 +1,7 @@
 package com.example.cookbook.ui.screens
 
+import android.media.MediaPlayer
+import android.view.SoundEffectConstants
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -16,17 +18,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cookbook.R
 
 @Composable
 fun WelcomeScreen(onStartClick: () -> Unit) {
     var visible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val view = LocalView.current
     
-    // Uruchomienie animacji wejścia po załadowaniu ekranu
+    // Uruchomienie animacji wejścia i odtworzenie dźwięku startowego
     LaunchedEffect(Unit) {
         visible = true
+        try {
+            val mp = MediaPlayer.create(context, R.raw.startup)
+            mp.setOnCompletionListener { it.release() }
+            mp.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     // Animacja pulsującego przycisku
@@ -95,7 +109,11 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = onStartClick,
+            onClick = {
+                // Standardowy dźwięk tapnięcia Androida
+                view.playSoundEffect(SoundEffectConstants.CLICK)
+                onStartClick()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)

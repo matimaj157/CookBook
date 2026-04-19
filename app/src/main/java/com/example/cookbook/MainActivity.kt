@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -33,6 +34,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CookBookTheme {
+                val view = LocalView.current
+                // Wymuszenie włączenia efektów dźwiękowych w widoku
+                LaunchedEffect(Unit) {
+                    if (!view.isSoundEffectsEnabled) {
+                        view.isSoundEffectsEnabled = true
+                    }
+                }
+
                 val navController = rememberNavController()
 
                 // Pobieramy ViewModel
